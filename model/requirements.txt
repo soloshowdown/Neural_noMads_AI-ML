@@ -1,0 +1,5 @@
+pymupdf
+spacy
+pandas
+scikit-learn
+numpy
