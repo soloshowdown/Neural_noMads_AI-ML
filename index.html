@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeRadar - AI-Powered Resume Screening</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        .gradient-card {
+            background: linear-gradient(135deg, #4d6bf2 0%, #764ba2 100%);
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Sidebar -->
+        <nav class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg">
+            <div class="flex items-center justify-start px-4 py-6">
+                <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span class="ml-2 text-xl font-bold text-gray-800">ResumeRadar</span>
+            </div>
+            <div class="px-4">
+                <div class="space-y-4">
+                    <a href="#" class="flex items-center space-x-2 p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="ml-64 p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-800">Welcome to ResumeRadar</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">Last updated: <span id="lastUpdated"></span></span>
+                    <button onclick="refreshData()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl custom-shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Total Resumes</h3>
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <p class="text-3xl font-bold mt-4">1,249</p>    
+                    <p class="text-sm text-green-500 mt-2">+12.5% from last month</p>
+                </div>
+
+                <div class="bg-white rounded-xl custom-shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">AI Match Rate</h3>
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-indigo-600">92%</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Accuracy Rate</p>
+                            <p class="text-sm text-green-500">↑ 2.3% improvement</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl custom-shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Processing Time</h3>
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                            <span class="text-xl font-bold text-green-600">45s</span>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Average Time</p>
+                            <p class="text-sm text-green-500">↓ 15s faster</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="bg-white rounded-xl custom-shadow p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-stormy-slate">Upload Resume</h2>
+                    <button  class=" px-6 py-2 mi-h-12 break-words mix-w-40 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 ml-[900px] text-sm">
+                     Via Email
+                    </button>
+                    <div class="flex space-x-3">
+                        <button onclick="showEmailInstructions()" class="flex items-center px-4 py-2 bg-stormy-dark text-white rounded-lg hover:bg-stormy-slate transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            Upload via Email
+                        </button>
+                    </div>
+                </div>
+                <p class="text-stormy-dark mb-4">Upload PDF resumes for AI-powered screening and analysis</p>
+                <div class="flex items-center justify-center w-full">
+                    <label class="flex flex-col w-full h-32 border-4 border-dashed border-stormy-medium hover:bg-stormy-light hover:bg-opacity-20 hover:border-stormy-dark rounded-lg transition-colors">
+                        <div class="flex flex-col items-center justify-center pt-7">
+                            <svg class="w-12 h-12 text-stormy-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            <p class="pt-1 text-sm tracking-wider text-stormy-dark group-hover:text-stormy-slate">
+                                Drag and drop your resume or click to browse
+                            </p>
+                        </div>
+                        <input type="file" class="opacity-0" accept=".pdf" />
+                    </label>
+                </div>
+                
+                <!-- Process Emails Button at Bottom Right -->
+                <div class="flex justify-end mt-4">
+                    <button onclick="processEmails()" class="flex items-center px-4 py-2 bg-stormy-medium text-white rounded-lg hover:bg-stormy-dark transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                        </svg>
+                        Process Emails
+                    </button>
+                </div>
+            
+                <!-- Email Instructions Modal -->
+                <div id="emailInstructionsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+                    <!-- ... (keep existing modal content unchanged) ... -->
+                </div>
+            </div>
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-xl custom-shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4">Resume Upload Trends</h2>
+                    <canvas id="uploadTrends"></canvas>
+                </div>
+                
+                <!-- Top 5 Resumes -->
+                <div class="bg-white rounded-xl custom-shadow p-6">
+                    <h2 class="text-xl font-semibold mb-4">Top 5 Resumes</h2>
+                    <div class="space-y-4" id="topResumes">
+                        <!-- Top resumes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
