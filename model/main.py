@@ -10,13 +10,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Load spaCy NLP model
 nlp = spacy.load("en_core_web_sm")
 
-
 def extract_text_from_pdf(pdf_path):
     """Extract text from a PDF file."""
     doc = fitz.open(pdf_path)
     text = " ".join([page.get_text("text") for page in doc])
     return text
-
 
 def extract_resume_details(text):
     """Extract relevant details from resume text."""
@@ -43,11 +41,11 @@ def extract_resume_details(text):
     degrees = re.findall(r'(B\.?Tech|M\.?Tech|B\.?Sc|M\.?Sc|MBA|PhD|Bachelor|Master|BE|ME|MCA|BCA|BBA|MS)', text, re.IGNORECASE)
     details["degree"] = degrees[0] if degrees else ""
 
-    # Extract experience (Looking for 'years' keyword)
+    # Extract experience
     exp_match = re.findall(r'(\d{1,2}\+? years?|\d{1,2}\.\d years?)', text)
     details["experience"] = exp_match[0] if exp_match else "0 years"
 
-    # Extract grades (Common grade formats like CGPA, GPA, 9/10, 85%)
+    # Extract grades
     grades = re.findall(r'(CGPA[:\s]\d{1,2}\.\d|\d{1,2}\/10|\d{2,3}%)', text)
     details["grade"] = grades[0] if grades else ""
 
@@ -56,12 +54,11 @@ def extract_resume_details(text):
     found_technologies = [tech for tech in tech_keywords if re.search(r'\b' + re.escape(tech) + r'\b', text, re.IGNORECASE)]
     details["technologies"] = found_technologies
 
-    # Extract certificates (Assumes certificate-related keywords like 'Certified')
+    # Extract certificates
     certificates = re.findall(r'(Certified|Certification in [A-Za-z\s]+)', text)
     details["certificates"] = certificates if certificates else []
 
     return details
-
 
 def process_resumes(pdf_folder):
     """Process all resumes in the folder and save data in CSV."""
@@ -75,12 +72,10 @@ def process_resumes(pdf_folder):
 
     df = pd.DataFrame(data)
     
-    # Ensure technologies and certificates are stored as comma-separated values
     df["technologies"] = df["technologies"].apply(lambda x: ", ".join(x) if isinstance(x, list) else str(x))
     df["certificates"] = df["certificates"].apply(lambda x: ", ".join(x) if isinstance(x, list) else str(x))
 
     return df
-
 
 def calculate_ats_scores(df, job_description):
     """Calculate ATS scores based on job description matching."""
@@ -91,11 +86,10 @@ def calculate_ats_scores(df, job_description):
     job_vector = vectorizer.transform([job_description])
     scores = cosine_similarity(tfidf_matrix, job_vector).flatten()
 
-    # Normalize ATS scores between 0 and 100
     df["ats_score"] = (scores / max(scores)) * 100 if max(scores) > 0 else 0
+    df["ats_score"] = df["ats_score"].round(6)  # Ensure rounding for consistent output
 
     return df
-
 
 # Set the folder path for PDFs
 pdf_folder = "resumes/"
@@ -105,10 +99,12 @@ job_description = "Python, Machine Learning, 3+ years experience, Bachelor's Deg
 df = process_resumes(pdf_folder)
 df = calculate_ats_scores(df, job_description)
 
-# Save updated DataFrame with ATS scores
-df.to_csv("resume_data.csv", index=False)
-print("Updated resume data with ATS scores saved to resume_data.csv")
-
-# Display top candidates
+# Sort and get top 3 candidates
 top_candidates = df.sort_values(by="ats_score", ascending=False).head(3)
+
+# Save only top 3 to CSV
+top_candidates.to_csv("top_3_candidates.csv", index=False)
+print("Top 3 candidates saved to top_3_candidates.csv")
+
+# Display the top 3 candidates in terminal
 print(top_candidates)
