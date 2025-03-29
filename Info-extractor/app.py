@@ -3,7 +3,7 @@ import os
 from scripts.extract_text import extract_text_from_pdf, extract_text_from_docx
 from scripts.extract_info import extract_info
 from scripts.extract_skills import extract_skills
-from scripts.job_match import match_resume_to_job  # Import job matching function
+from scripts.job_match import match_resume_to_job
 
 app = Flask(__name__)
 
@@ -11,7 +11,7 @@ app = Flask(__name__)
 def upload_resume():
     if request.method == "POST":
         file = request.files["resume"]
-        job_description = request.form["job_description"]  # Get job description input
+        job_description = request.form["job_description"]
         filename = file.filename
         file_path = os.path.join("data", filename)
         file.save(file_path)

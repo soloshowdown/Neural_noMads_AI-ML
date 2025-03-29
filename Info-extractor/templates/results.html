@@ -8,90 +8,140 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            text-align: center;
-            padding: 20px;
+            padding: 50px;
         }
+
         .container {
-            max-width: 600px;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
             margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+
+        h2 {
             color: #333;
+            margin-bottom: 20px;
         }
-        .score-box {
-            background: #007bff;
-            color: white;
-            padding: 15px;
-            font-size: 22px;
-            font-weight: bold;
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
             border-radius: 5px;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
             margin: 10px 0;
         }
-        .missing-skills {
-            margin-top: 20px;
-            text-align: left;
-        }
-        ul {
-            list-style-type: none;
+
+        .skills-list, .missing-skills-list {
+            list-style: none;
             padding: 0;
         }
-        ul li {
-            background: #ff4d4d;
-            color: white;
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
+
+        .skills-list li, .missing-skills-list li {
             display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background: #e9ecef;
+            border-radius: 15px;
+            font-size: 14px;
         }
+
+        .missing-skills-list li {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .info-item h3 {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-item p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
         .back-button {
             display: inline-block;
             margin-top: 20px;
+            padding: 10px 20px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
-            padding: 10px 15px;
             border-radius: 5px;
-            font-size: 16px;
+            transition: 0.3s;
         }
+
         .back-button:hover {
             background-color: #0056b3;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: gray;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Resume Analysis Results</h1>
-        
-        <p>Your ATS Match Score:</p>
-        <div class="score-box">{{ ats_score }}%</div>
+        <h2>Resume Analysis Results</h2>
 
-        <div class="missing-skills">
-            <h2>Missing Key Skills:</h2>
-            {% if missing_skills %}
-                <ul>
-                    {% for skill in missing_skills %}
-                        <li>{{ skill }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p style="color: green;">Great job! Your resume covers all required skills.</p>
-            {% endif %}
+        <div class="section">
+            <h3>ATS Score</h3>
+            <div class="score">{{ ats_score }}%</div>
         </div>
 
-        <a href="/" class="back-button">Analyze Another Resume</a>
-    </div>
+        <div class="section">
+            <h3>Resume Information</h3>
+            <div class="info-grid">
+                {% for key, value in info.items() %}
+                <div class="info-item">
+                    <h3>{{ key }}</h3>
+                    <p>{{ value }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
-    <div class="footer">
-        <p>Powered by AI - Resume Matcher | 2025</p>
+        <div class="section">
+            <h3>Identified Skills</h3>
+            <ul class="skills-list">
+                {% for skill in skills %}
+                <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if missing_skills %}
+        <div class="section">
+            <h3>Missing Skills</h3>
+            <ul class="missing-skills-list">
+                {% for skill in missing_skills %}
+                <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <a href="/" class="back-button">Analyze Another Resume</a>
     </div>
 </body>
 </html>

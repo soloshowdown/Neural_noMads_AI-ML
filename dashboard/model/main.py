@@ -60,44 +60,22 @@ def extract_resume_details(text):
 
     return details
 
-def process_single_resume(pdf_path):
-    """Process a single resume and return its details."""
-    text = extract_text_from_pdf(pdf_path)
-    details = extract_resume_details(text)
-    details["technologies"] = ", ".join(details["technologies"])
-    details["certificates"] = ", ".join(details["certificates"])
-    return details
-
-def process_resumes(pdf_files, job_description, required_experience, required_technologies):
-    """Process multiple resumes and calculate ATS scores."""
+def process_resumes(pdf_folder):
+    """Process all resumes in the folder and save data in CSV."""
     data = []
-    
-    for pdf_path in pdf_files:
-        text = extract_text_from_pdf(pdf_path)
+    pdf_files = glob.glob(os.path.join(pdf_folder, "*.pdf"))
+
+    for pdf in pdf_files:
+        text = extract_text_from_pdf(pdf)
         details = extract_resume_details(text)
         data.append(details)
 
     df = pd.DataFrame(data)
     
-    # Convert lists to strings
     df["technologies"] = df["technologies"].apply(lambda x: ", ".join(x) if isinstance(x, list) else str(x))
     df["certificates"] = df["certificates"].apply(lambda x: ", ".join(x) if isinstance(x, list) else str(x))
 
-    # Calculate ATS scores
-    df = calculate_ats_scores(df, job_description)
-    
-    # Filter by experience and technologies
-    df["experience_years"] = df["experience"].apply(lambda x: float(re.findall(r'\d+\.?\d*', x)[0]) if re.findall(r'\d+\.?\d*', x) else 0)
-    df = df[df["experience_years"] >= required_experience]
-    
-    # Calculate technology match score
-    df["tech_match"] = df["technologies"].apply(lambda x: sum(1 for tech in required_technologies if tech.lower() in x.lower()) / len(required_technologies))
-    
-    # Sort by combined score
-    df["final_score"] = (df["ats_score"] + df["tech_match"] * 100) / 2
-    df = df.sort_values("final_score", ascending=False)
-    
-    return df.to_dict('records')
+    return df
 
 def calculate_ats_scores(df, job_description):
     """Calculate ATS scores based on job description matching."""
@@ -109,6 +87,24 @@ def calculate_ats_scores(df, job_description):
     scores = cosine_similarity(tfidf_matrix, job_vector).flatten()
 
     df["ats_score"] = (scores / max(scores)) * 100 if max(scores) > 0 else 0
-    df["ats_score"] = df["ats_score"].round(6)
+    df["ats_score"] = df["ats_score"].round(6)  # Ensure rounding for consistent output
 
     return df
+
+# Set the folder path for PDFs
+pdf_folder = "resumes/"
+job_description = "Python, Machine Learning, 3+ years experience, Bachelor's Degree in CS"
+
+# Process resumes and calculate ATS scores
+df = process_resumes(pdf_folder)
+df = calculate_ats_scores(df, job_description)
+
+# Sort and get top 3 candidates
+top_candidates = df.sort_values(by="ats_score", ascending=False).head(3)
+
+# Save only top 3 to CSV
+top_candidates.to_csv("top_3_candidates.csv", index=False)
+print("Top 3 candidates saved to top_3_candidates.csv")
+
+# Display the top 3 candidates in terminal
+print(top_candidates)

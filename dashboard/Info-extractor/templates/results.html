@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analysis Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .score-box {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .missing-skills {
+            margin-top: 20px;
+            text-align: left;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background: #ff4d4d;
+            color: white;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Analysis Results</h1>
+        
+        <p>Your ATS Match Score:</p>
+        <div class="score-box">{{ ats_score }}%</div>
+
+        <div class="missing-skills">
+            <h2>Missing Key Skills:</h2>
+            {% if missing_skills %}
+                <ul>
+                    {% for skill in missing_skills %}
+                        <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: green;">Great job! Your resume covers all required skills.</p>
+            {% endif %}
+        </div>
+
+        <a href="/" class="back-button">Analyze Another Resume</a>
+    </div>
+
+    <div class="footer">
+        <p>Powered by AI - Resume Matcher | 2025</p>
+    </div>
+</body>
+</html>
