@@ -1,0 +1,11 @@
+resume_text,required_skills,years_experience,hiring_success_rate,hired
+"Python;Machine Learning;SQL","Python;ML;SQL",3,85,1
+"Java;Spring;MySQL","Java;Spring",5,70,1
+"C++;Embedded Systems;IoT","C++;IoT",2,60,0
+"Python;Django;PostgreSQL","Python;Django",4,90,1
+"JavaScript;React;Node.js","JS;React",3,75,1
+"R;Data Science;Tableau","R;ML",2,50,0
+"C#;ASP.NET;SQL Server","C#;ASP.NET",6,80,1
+"Swift;iOS;Mobile Development","Swift;Mobile",4,65,1
+"Go;Kubernetes;Cloud","Go;Cloud",3,55,0
+"Python;TensorFlow;Deep Learning","Python;DL",5,95,1

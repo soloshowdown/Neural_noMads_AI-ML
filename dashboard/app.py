@@ -1,22 +1,27 @@
 from flask import Flask, render_template, request, jsonify, send_file
+from werkzeug.utils import secure_filename
 import os
 import sys
-from werkzeug.utils import secure_filename
 import pandas as pd
 import time
+from model.main import process_resume, process_multiple_resumes
 
 # Add the current directory to Python path to find the model module
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from model.main import process_resume, process_multiple_resumes, calculate_score
 
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app = Flask(__name__, 
+    static_folder='static',
+    template_folder='templates'
+)
+
+# Configure upload folder
+UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Ensure upload directory exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-# Global variables for stats
+# Initialize stats
 total_resumes = 0
 match_rate = 0
 processing_time = 0
@@ -44,8 +49,6 @@ def analyze_single():
         start_time = time.time()
         try:
             result = process_resume(filepath)
-            # Calculate score for single resume
-            result["score"] = calculate_score(result, "", "Python, Java, Machine Learning")  # Default technologies
             processing_time = time.time() - start_time
             
             # Update stats

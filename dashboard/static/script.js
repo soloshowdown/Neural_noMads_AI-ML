@@ -130,13 +130,15 @@ function populateTable(csvData) {
         return {
             name: columns[0] || 'N/A',
             email: columns[1] || 'N/A',
-            technologies: columns[2] ? columns[2].replace(/"/g, '').trim() : 'N/A'
+            technologies: columns[2] ? columns[2].replace(/"/g, '').trim() : 'N/A',
+            score: parseFloat(columns[3]) || 0
         };
     });
     
     // Create table rows for first 5 results only
     parsedData.slice(0, 5).forEach((data, index) => {
         const tr = document.createElement('tr');
+        
         tr.innerHTML = `
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.name}</td>
@@ -151,14 +153,21 @@ function populateTable(csvData) {
                 </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.technologies}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <button onclick="sendEmail('${data.email}')" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Send Mails
+            <td class="px-6 py-4 whitespace-nowrap">
+                <button onclick="sendEmail('${data.email}')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Send Mail
                 </button>
             </td>
         `;
         tableBody.appendChild(tr);
     });
+}
+
+function getScoreColor(score) {
+    if (score >= 90) return 'text-green-600 font-bold';
+    if (score >= 80) return 'text-green-500';
+    if (score >= 70) return 'text-yellow-600';
+    return 'text-red-500';
 }
 
 function sendEmail(email) {
