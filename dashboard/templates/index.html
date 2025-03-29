@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,33 @@
         }
         .custom-shadow {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        /* Dark mode styles */
+        .dark {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .dark .bg-white {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+        .dark .text-gray-800 {
+            color: #ffffff;
+        }
+        .dark .text-gray-700 {
+            color: #e5e5e5;
+        }
+        .dark .text-gray-500 {
+            color: #a3a3a3;
+        }
+        .dark .bg-gray-50 {
+            background-color: #1a1a1a;
+        }
+        .dark .custom-shadow {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .dark .bg-indigo-50 {
+            background-color: rgba(79, 70, 229, 0.1);
         }
     </style>
 </head>
@@ -44,6 +71,14 @@
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-2xl font-bold text-gray-800">Welcome to ResumeRadar</h1>
                 <div class="flex items-center space-x-4">
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center">
+                        <svg class="w-6 h-6 theme-toggle-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg class="w-6 h-6 theme-toggle-dark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
                     <span class="text-sm text-gray-500">Last updated: <span id="lastUpdated"></span></span>
                     <button onclick="refreshData()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
                         Refresh
@@ -61,7 +96,7 @@
                         </svg>
                     </div>
                     <p class="text-3xl font-bold mt-4" id="totalResumes">0</p>    
-                    <p class="text-sm text-green-500 mt-2">+12.5% from last month</p>
+                    <p class="text-sm text-green-500 mt-2" id="resumeChange">+0% from last month</p>
                 </div>
 
                 <div class="bg-white rounded-xl custom-shadow p-6">
@@ -77,7 +112,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm text-gray-500">Accuracy Rate</p>
-                            <p class="text-sm text-green-500">↑ 2.3% improvement</p>
+                            <p class="text-sm text-green-500" id="matchRateChange">↑ 0% improvement</p>
                         </div>
                     </div>
                 </div>
@@ -95,7 +130,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm text-gray-500">Average Time</p>
-                            <p class="text-sm text-green-500">↓ 15s faster</p>
+                            <p class="text-sm text-green-500" id="processingTimeChange">↓ 0s faster</p>
                         </div>
                     </div>
                 </div>

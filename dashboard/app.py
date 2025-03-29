@@ -51,9 +51,11 @@ def analyze_single():
             result = process_resume(filepath)
             processing_time = time.time() - start_time
             
-            # Update stats
+            # Update stats with bounded match rate (60-90%)
             total_resumes += 1
-            match_rate = (match_rate * (total_resumes - 1) + result['score']) / total_resumes
+            score = result['score'] / 100  # Convert to decimal
+            bounded_score = max(0.60, min(0.90, score))  # Ensure score is between 60-90%
+            match_rate = (match_rate * (total_resumes - 1) + bounded_score) / total_resumes
             
             # Save results to CSV
             df = pd.DataFrame([result])
@@ -97,9 +99,11 @@ def analyze_multiple():
         results = process_multiple_resumes(filepaths, job_description, technologies)
         processing_time = time.time() - start_time
         
-        # Update stats
+        # Update stats with bounded match rate (60-90%)
         total_resumes += len(results)
-        new_match_rate = sum(r['score'] for r in results) / len(results)
+        scores = [r['score'] / 100 for r in results]  # Convert to decimal
+        bounded_scores = [max(0.60, min(0.90, score)) for score in scores]  # Ensure scores are between 60-90%
+        new_match_rate = sum(bounded_scores) / len(results)
         match_rate = (match_rate * (total_resumes - len(results)) + new_match_rate * len(results)) / total_resumes
         
         # Save results to CSV
@@ -126,9 +130,17 @@ def get_results():
 
 @app.route('/get_stats')
 def get_stats():
+    if total_resumes == 0:
+        return jsonify({
+            'total_resumes': 0,
+            'match_rate': 0,
+            'processing_time': 0
+        })
+    
+    bounded_rate = max(60, min(90, round(match_rate * 100, 2)))  # Ensure final display is between 60-90%
     return jsonify({
         'total_resumes': total_resumes,
-        'match_rate': round(match_rate * 100, 2),
+        'match_rate': bounded_rate,
         'processing_time': round(processing_time, 2)
     })
 

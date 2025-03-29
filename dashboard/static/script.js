@@ -232,17 +232,55 @@ function updateFileUploadText(input, type) {
     }
 }
 
+// Keep track of previous stats for change calculation
+let previousStats = {
+    total_resumes: 0,
+    match_rate: 0,
+    processing_time: 0
+};
+
 // Update dashboard stats
 function updateDashboardStats() {
     fetch('/get_stats')
         .then(response => response.json())
         .then(data => {
+            // Update total resumes
             document.getElementById('totalResumes').textContent = data.total_resumes;
-            document.getElementById('matchRate').textContent = `${data.match_rate}%`;
-            document.getElementById('processingTime').textContent = `${data.processing_time}s`;
+            
+            // Only show changes if we have processed resumes
+            if (data.total_resumes > 0) {
+                const resumeChange = ((data.total_resumes - previousStats.total_resumes) / Math.max(previousStats.total_resumes, 1)) * 100;
+                document.getElementById('resumeChange').textContent = 
+                    `${resumeChange >= 0 ? '+' : ''}${resumeChange.toFixed(1)}% from last update`;
+                
+                // Update match rate with percentage
+                document.getElementById('matchRate').textContent = `${data.match_rate.toFixed(1)}%`;
+                const matchRateChange = data.match_rate - previousStats.match_rate;
+                document.getElementById('matchRateChange').textContent = 
+                    `${matchRateChange >= 0 ? '↑' : '↓'} ${Math.abs(matchRateChange).toFixed(1)}% change`;
+                
+                // Update processing time
+                document.getElementById('processingTime').textContent = `${data.processing_time.toFixed(1)}s`;
+                const timeChange = previousStats.processing_time - data.processing_time;
+                document.getElementById('processingTimeChange').textContent = 
+                    `${timeChange >= 0 ? '↓' : '↑'} ${Math.abs(timeChange).toFixed(1)}s change`;
+            } else {
+                // Reset display when no resumes
+                document.getElementById('resumeChange').textContent = 'Upload resumes to start';
+                document.getElementById('matchRate').textContent = '0%';
+                document.getElementById('matchRateChange').textContent = 'No data yet';
+                document.getElementById('processingTime').textContent = '0s';
+                document.getElementById('processingTimeChange').textContent = 'Waiting for uploads';
+            }
+            
+            // Store current stats as previous for next update
+            previousStats = { ...data };
         })
         .catch(error => console.error('Error updating stats:', error));
 }
+
+// Update stats every 5 seconds
+setInterval(updateDashboardStats, 5000);
 
 // Update last updated time
 function updateLastUpdated() {
@@ -264,4 +302,46 @@ function refreshData() {
 
 // Initialize dashboard
 updateLastUpdated();
-updateDashboardStats(); 
+updateDashboardStats();
+
+// Theme management
+function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark');
+    const lightIcon = document.querySelector('.theme-toggle-light');
+    const darkIcon = document.querySelector('.theme-toggle-dark');
+    
+    if (isDark) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        lightIcon.classList.remove('hidden');
+        darkIcon.classList.add('hidden');
+        localStorage.setItem('theme', 'light');
+    } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        lightIcon.classList.add('hidden');
+        darkIcon.classList.remove('hidden');
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const html = document.documentElement;
+    const lightIcon = document.querySelector('.theme-toggle-light');
+    const darkIcon = document.querySelector('.theme-toggle-dark');
+    
+    if (savedTheme === 'dark') {
+        html.classList.add('dark');
+        html.classList.remove('light');
+        lightIcon.classList.add('hidden');
+        darkIcon.classList.remove('hidden');
+    } else {
+        html.classList.add('light');
+        html.classList.remove('dark');
+        lightIcon.classList.remove('hidden');
+        darkIcon.classList.add('hidden');
+    }
+}); 
