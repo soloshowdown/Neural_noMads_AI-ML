@@ -1,10 +1,8 @@
 name,email,technologies,score
+Ananya Iyer,ananyaiyer@gmail.com,"Python, SQL, JavaScript, HTML, CSS",98.5
 "Arjun Sharma
-Arjun Sharma",arjunsharma@gmail.com,Docker,98.5
-Dakshith Shetty,dakshithshetty19@gmail.com,"Python, Java, TensorFlow, Machine Learning, Deep Learning, Data Science, React, JavaScript, HTML, CSS, Git, MongoDB, MySQL, Flask",95.0
+Arjun Sharma",arjunsharma@gmail.com,Docker,95.0
+Dakshith Shetty,dakshithshetty19@gmail.com,"Python, Java, TensorFlow, Machine Learning, Deep Learning, Data Science, React, JavaScript, HTML, CSS, Git, MongoDB, MySQL, Flask",92.5
 "Megha Joshi
-Megha Joshi",meghajoshi@gmail.com,"Java, TensorFlow, Flask",92.5
-Neha Kapoor,nehakapoor@gmail.com,Docker,90.0
-"Rahul Desai
-Rahul Desai
-",rahuldesai@gmail.com,"Machine Learning, MongoDB, Django",87.5
+Megha Joshi",meghajoshi@gmail.com,"Java, TensorFlow, Flask",90.0
+Neha Kapoor,nehakapoor@gmail.com,Docker,87.5
