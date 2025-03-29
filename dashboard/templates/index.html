@@ -55,11 +55,17 @@
             </div>
             <div class="px-4">
                 <div class="space-y-4">
-                    <a href="#" class="flex items-center space-x-2 p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                    <a href="#dashboard" class="flex items-center space-x-2 p-2 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
                         <span>Dashboard</span>
+                    </a>
+                    <a href="#technology" class="flex items-center space-x-2 p-2 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>Technology Trends</span>
                     </a>
                 </div>
             </div>
@@ -232,6 +238,37 @@
                                 <!-- Results will be populated here -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology Trends Section -->
+            <div id="technologyTrendsSection" class="hidden">
+                <div class="bg-white rounded-xl custom-shadow p-6 mb-8">
+                    <h2 class="text-xl font-semibold mb-6">Technology Distribution</h2>
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <!-- Chart -->
+                        <div class="flex-1">
+                            <canvas id="techDistributionChart" class="w-full h-[400px]"></canvas>
+                        </div>
+                        <!-- Table -->
+                        <div class="flex-1">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technology</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Count</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trend</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="techTrendsTable" class="bg-white divide-y divide-gray-200">
+                                        <!-- Technology trends data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

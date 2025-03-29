@@ -1,5 +1,6 @@
 // UI State Management
 let currentView = 'dashboard';
+let techDistributionChart = null;
 
 // Form visibility management
 function showSingleUpload() {
@@ -344,4 +345,123 @@ document.addEventListener('DOMContentLoaded', function() {
         lightIcon.classList.remove('hidden');
         darkIcon.classList.add('hidden');
     }
-}); 
+});
+
+// Navigation handling
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hash change listener for navigation
+    window.addEventListener('hashchange', handleNavigation);
+    handleNavigation(); // Handle initial navigation
+    
+    // Initialize other event listeners
+    initializeFormListeners();
+    initializeFileUploadListeners();
+    
+    // Start periodic updates
+    updateDashboardStats();
+    setInterval(updateDashboardStats, 5000);
+});
+
+function handleNavigation() {
+    const hash = window.location.hash || '#dashboard';
+    const sections = {
+        '#dashboard': document.querySelector('.ml-64.p-8 > div:not(#technologyTrendsSection)'),
+        '#technology': document.getElementById('technologyTrendsSection')
+    };
+    
+    // Update navigation highlighting
+    document.querySelectorAll('nav a').forEach(link => {
+        if (link.getAttribute('href') === hash) {
+            link.classList.add('bg-indigo-50', 'text-indigo-600');
+        } else {
+            link.classList.remove('bg-indigo-50', 'text-indigo-600');
+        }
+    });
+    
+    // Show/hide sections
+    Object.entries(sections).forEach(([sectionHash, element]) => {
+        if (element) {
+            if (sectionHash === hash) {
+                element.classList.remove('hidden');
+                if (sectionHash === '#technology') {
+                    loadTechnologyTrends();
+                }
+            } else {
+                element.classList.add('hidden');
+            }
+        }
+    });
+}
+
+// Technology Trends Functions
+async function loadTechnologyTrends() {
+    try {
+        const response = await fetch('/get_tech_trends');
+        const data = await response.json();
+        updateTechnologyChart(data);
+        updateTechnologyTable(data);
+    } catch (error) {
+        console.error('Error loading technology trends:', error);
+    }
+}
+
+function updateTechnologyChart(data) {
+    const ctx = document.getElementById('techDistributionChart').getContext('2d');
+    
+    // Destroy existing chart if it exists
+    if (techDistributionChart) {
+        techDistributionChart.destroy();
+    }
+    
+    techDistributionChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map(item => item.technology),
+            datasets: [{
+                label: 'Technology Distribution',
+                data: data.map(item => item.count),
+                backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                borderColor: 'rgba(79, 70, 229, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
+}
+
+function updateTechnologyTable(data) {
+    const tableBody = document.getElementById('techTrendsTable');
+    tableBody.innerHTML = '';
+    
+    data.forEach(item => {
+        const tr = document.createElement('tr');
+        const trendIcon = item.trend === 'Medium' ? '→' : (item.trend === 'High' ? '↑' : '↓');
+        const trendClass = item.trend === 'Medium' ? 'text-yellow-500' : (item.trend === 'High' ? 'text-green-500' : 'text-red-500');
+        
+        tr.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.technology}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.count}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.percentage}%</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm ${trendClass}">${trendIcon} ${item.trend}</td>
+        `;
+        
+        tableBody.appendChild(tr);
+    });
+} 

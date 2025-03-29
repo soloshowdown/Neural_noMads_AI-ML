@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 import sys
 import pandas as pd
 import time
+import json
+from collections import Counter
 from model.main import process_resume, process_multiple_resumes
 
 # Add the current directory to Python path to find the model module
@@ -27,7 +29,11 @@ match_rate = 0
 processing_time = 0
 
 @app.route('/')
-def index():
+def landing():
+    return render_template('landing.html')
+
+@app.route('/dashboard')
+def dashboard():
     return render_template('index.html')
 
 @app.route('/analyze_single', methods=['POST'])
@@ -143,6 +149,45 @@ def get_stats():
         'match_rate': bounded_rate,
         'processing_time': round(processing_time, 2)
     })
+
+@app.route('/get_tech_trends')
+def get_tech_trends():
+    try:
+        if not os.path.exists('results.csv'):
+            return jsonify([])
+            
+        # Read the results CSV file
+        df = pd.read_csv('results.csv')
+        
+        # Extract technologies from all resumes
+        all_technologies = []
+        for tech_list in df['technologies'].dropna():
+            # Remove quotes and split the string into a list
+            technologies = tech_list.strip('"').split(', ')
+            all_technologies.extend(technologies)
+        
+        # Count occurrences of each technology
+        tech_counts = Counter(all_technologies)
+        total_mentions = sum(tech_counts.values())
+        
+        # Calculate percentages and determine trends
+        tech_data = []
+        for tech, count in tech_counts.most_common():
+            percentage = round((count / total_mentions) * 100, 1)
+            # Determine trend based on percentage
+            trend = 'High' if percentage > 12 else ('Medium' if percentage > 8 else 'Low')
+            
+            tech_data.append({
+                'technology': tech,
+                'count': count,
+                'percentage': percentage,
+                'trend': trend
+            })
+        
+        return jsonify(tech_data)
+    except Exception as e:
+        print(f"Error in get_tech_trends: {str(e)}")
+        return jsonify([]), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001) 
