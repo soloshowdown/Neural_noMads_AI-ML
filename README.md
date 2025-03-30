@@ -18,13 +18,6 @@ This AI-powered Resume Screening System is designed to help recruiters automate 
 - **re** (Regular expressions for pattern matching)
 - **scikit-learn** (TF-IDF and cosine similarity for candidate scoring)
 
-## 📂 Project Structure
-```
-├── resumes/                # Folder containing PDF resumes
-├── resume_screening.py     # Main script for resume processing
-├── resume_data.csv         # Output file containing parsed resume details
-├── README.md               # Project documentation
-```
 
 ## ⚙️ Installation & Setup
 ### Prerequisites
@@ -46,7 +39,7 @@ python resume_screening.py
 ### Output:
 ```
                name                       email experience  ...    degree                                       technologies   ats_score
-1       Rahul Desai        rahuldesai@gmail.com    0 years  ...       mba                               Machine Learning mba   75.457000
+1       Rahul Desai        rahuldesai@gmail.com    0 years  ...       mba                                   Machine Learning   75.457000
 2       SumitYesade     sumityesade14@gmail.com    0 years  ...  Bachelor  Python, Java, SQL, Machine Learning, AWS, Reac...   99.041745
 3   Vaibhav Tatkare  vaibhavtatkare@outlook.com    0 years  ...       mba  Python, Java, SQL, TensorFlow, Machine Learnin...   87.472489
 ```
