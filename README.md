@@ -43,12 +43,12 @@ python resume_screening.py
 4. View the top 3 candidates in the terminal and access the full report in `resume_data.csv`.
 
 ## 📊 Sample Output
-### Terminal Output:
+### Output:
 ```
                name                       email experience  ...    degree                                        tech_degree   ats_score
-9       Rahul Desai        rahuldesai@gmail.com    0 years  ...       mba                               Machine Learning mba   75.457000
-12      SumitYesade     sumityesade14@gmail.com    0 years  ...  Bachelor  Python, Java, SQL, Machine Learning, AWS, Reac...   99.041745
-13  Vaibhav Tatkare  vaibhavtatkare@outlook.com    0 years  ...       mba  Python, Java, SQL, TensorFlow, Machine Learnin...   87.472489
+1       Rahul Desai        rahuldesai@gmail.com    0 years  ...       mba                               Machine Learning mba   75.457000
+2       SumitYesade     sumityesade14@gmail.com    0 years  ...  Bachelor  Python, Java, SQL, Machine Learning, AWS, Reac...   99.041745
+3   Vaibhav Tatkare  vaibhavtatkare@outlook.com    0 years  ...       mba  Python, Java, SQL, TensorFlow, Machine Learnin...   87.472489
 ```
 
 ## 📌 Future Enhancements
