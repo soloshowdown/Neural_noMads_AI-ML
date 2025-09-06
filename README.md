@@ -56,14 +56,10 @@ This project is part of Vaibhav Tatkare's AI-driven portfolio, aiming to enhance
 ### ⭐ If you found this project useful, don't forget to star the repository!
 
 
-<p align="center">
-  <img src="pic1.png" alt="Screenshot 1" width="200"/>
-  <img src="pic2.png" alt="Screenshot 2" width="200"/>
-  <img src="pic3.png" alt="Screenshot 3" width="200"/>
-</p>
+![Screenshot 1](pic1.png)
+![Screenshot 2](pic2.png)
+![Screenshot 3](pic3.png)
+![Screenshot 4](pic4.png)
+![Screenshot 5](pic5.png)
 
-<p align="center">
-  <img src="pic4.png" alt="Screenshot 4" width="200"/>
-  <img src="pic5.png" alt="Screenshot 5" width="200"/>
-</p>
 
